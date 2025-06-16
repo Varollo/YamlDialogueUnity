@@ -1,18 +1,20 @@
-using System;
 using System.Linq;
 using YamlDialogueLib;
+using YamlDialogueUnity.Input;
+using YamlDialogueUnity.View;
 
 namespace YamlDialogueUnity
 {
     public class DialogueController
     {
+        private readonly InputManagerBase _inputManager;
+        private readonly DialogueViewBase _view;
+        
         private YamlDialogue _dialogueInstance;
-        private DialogueInputManager _input;
-        private DialogueView _view;
 
-        public DialogueController(DialogueInputManager input, DialogueView view)
+        public DialogueController(DialogueViewBase view, InputManagerBase inputManager)
         {
-            _input = input;
+            _inputManager = inputManager;
             _view = view;
         }
 
@@ -46,24 +48,35 @@ namespace YamlDialogueUnity
             if (step.HasOptions)
                 HandleOptions(step.Options);
             else
-                _input.Enable();
+                _inputManager.Enable();
         }
 
         private void HandleOptions(YamlDialogueOption[] options)
         {
-            _input.Disable();
+            _inputManager.Disable();
             _view.DisplayOptions(options.Select(o => o.Text).ToArray());
         }
 
         private void EndDialogue()
         {
             _view.Hide();
-            _input.Disable();
+            _inputManager.Disable();
         }
 
         public void PickOption(int optionId)
         {
             MoveStep(_dialogueInstance.MoveToOption(optionId));
+        }
+
+        public void DropDialogue()
+        {
+            _dialogueInstance = null;
+        }
+
+        internal void UpdateInput()
+        {
+            if (_inputManager.CheckInput())
+                Next();
         }
     }
 }
