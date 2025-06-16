@@ -1,5 +1,5 @@
 using UnityEngine;
-using YamlDialogueUnity;
+using YamlDialogueUnity.View;
 
 public class YamlDialogueExample01 : MonoBehaviour
 {
@@ -9,6 +9,6 @@ public class YamlDialogueExample01 : MonoBehaviour
     [ContextMenu("Play Dialogue")]
     private void Start()
     {
-        dialogueView.Show(dialogueFile);
+        dialogueView.Show(dialogueFile.text);
     }
 }

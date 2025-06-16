@@ -1,27 +1,27 @@
 using UnityEngine;
 using TMPro;
 
-namespace YamlDialogueUnity
+namespace YamlDialogueUnity.View
 {
     public class DialogueOptionView : MonoBehaviour
     {
         [SerializeField] private TMP_Text optionTxt;
 
         private int _optionId;
-        private DialogueController _controller;
+        private DialogueViewBase _view;
 
         public void Choose()
         {
-            _controller.PickOption(_optionId);
+            _view.PickOption(_optionId);
         }
 
-        public void CreateInstance(Transform parent, DialogueController controller, string text, int id)
+        public void CreateInstance(Transform parent, DialogueViewBase view, string text, int id)
         {
             var instance = Instantiate(this, parent);
             
             instance.optionTxt.text = instance.name = text;
             instance._optionId = id;
-            instance._controller = controller;
+            instance._view = view;
 
             // instance.transform.SetAsFirstSibling();
             instance.gameObject.SetActive(true);

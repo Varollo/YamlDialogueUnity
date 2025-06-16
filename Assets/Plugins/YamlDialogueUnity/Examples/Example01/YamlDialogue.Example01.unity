@@ -253,7 +253,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dialogueView: {fileID: 1547281480}
   dialogueFile: {fileID: 4900000, guid: ca34596dc493b394a93848b41f74bae3, type: 3}
-  nextKey: 13
 --- !u!4 &339905334
 Transform:
   m_ObjectHideFlags: 0
@@ -375,6 +374,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4d84f5599c69c2d408197435c47f94cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1547281481 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4336728518592527197, guid: b295429505722144d881bd7e54c8bcdb, type: 3}
+  m_PrefabInstance: {fileID: 1798354218669633626}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7bd08cd97a62174fafc4247d8199374, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1835234776
@@ -649,6 +659,10 @@ PrefabInstance:
       propertyPath: dialogueFile
       value: 
       objectReference: {fileID: 4900000, guid: ca34596dc493b394a93848b41f74bae3, type: 3}
+    - target: {fileID: 6091834835381294611, guid: b295429505722144d881bd7e54c8bcdb, type: 3}
+      propertyPath: inputManager
+      value: 
+      objectReference: {fileID: 1547281481}
     - target: {fileID: 6105199842976304644, guid: b295429505722144d881bd7e54c8bcdb, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -761,7 +775,8 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5883233149843595648, guid: b295429505722144d881bd7e54c8bcdb, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
