@@ -1,5 +1,5 @@
 using UnityEngine;
-using YamlDialogueUnity.View;
+using YamlDialogueUnity;
 
 public class YamlDialogueExample01 : MonoBehaviour
 {
