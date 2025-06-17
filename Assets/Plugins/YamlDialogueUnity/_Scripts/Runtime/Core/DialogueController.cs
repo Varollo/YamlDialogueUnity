@@ -1,21 +1,23 @@
 using System.Linq;
 using YamlDialogueLib;
-using YamlDialogueUnity.Input;
-using YamlDialogueUnity.View;
 
 namespace YamlDialogueUnity
 {
-    public class DialogueController
+    public class DialogueController : IDialogueOptionsListener
     {
-        private readonly InputManagerBase _inputManager;
-        private readonly DialogueViewBase _view;
+        private readonly DialogueInputHandler _inputHandler;
+        private readonly DialogueOptionsHandler _optionsHandler;
+        private readonly DialogueViewBase _dialogueView;
         
         private YamlDialogue _dialogueInstance;
 
-        public DialogueController(DialogueViewBase view, InputManagerBase inputManager)
+        public DialogueController(DialogueViewBase dialogueView)
         {
-            _inputManager = inputManager;
-            _view = view;
+            _dialogueView = dialogueView;
+            _inputHandler = new DialogueInputHandler();
+            _optionsHandler = new DialogueOptionsHandler(dialogueView.OptionPrefab, dialogueView.OptionsHolder);
+
+            _optionsHandler.AddListener(this);
         }
 
         public bool IsActive { get; internal set; }
@@ -28,7 +30,8 @@ namespace YamlDialogueUnity
 
         public void Next()
         {
-            MoveStep(_dialogueInstance.MoveNext());
+            if (_dialogueInstance != null)
+                MoveStep(_dialogueInstance.MoveNext());
         }
 
         private void MoveStep(bool canMove)
@@ -43,40 +46,53 @@ namespace YamlDialogueUnity
         {
             var step = _dialogueInstance.Current;
 
-            _view.UpdateView(step.Actor, step.Line, step.Actions);
+            _dialogueView.UpdateView(step.Actor, step.Line, step.Actions);
+
+            IDialogueInputTarget target = _dialogueView;
 
             if (step.HasOptions)
-                HandleOptions(step.Options);
-            else
-                _inputManager.Enable();
-        }
+            {
+                _optionsHandler.CreateOptions(
+                    step.Options.Select(o => o.Text).ToArray());
 
-        private void HandleOptions(YamlDialogueOption[] options)
-        {
-            _inputManager.Disable();
-            _view.DisplayOptions(options.Select(o => o.Text).ToArray());
+                target = _optionsHandler.GetOptionView(step.ConfirmOption);
+            }     
+
+            SelectInputTarget(target);
         }
 
         private void EndDialogue()
         {
-            _view.Hide();
-            _inputManager.Disable();
+            _dialogueView.Hide();
+            _inputHandler.SelectTarget(null);
         }
 
-        public void PickOption(int optionId)
-        {
-            MoveStep(_dialogueInstance.MoveToOption(optionId));
-        }
 
         public void DropDialogue()
         {
+            SelectInputTarget(null);
             _dialogueInstance = null;
         }
 
-        internal void UpdateInput()
+        public void SelectInputTarget(IDialogueInputTarget target)
         {
-            if (_inputManager.CheckInput())
-                Next();
+            _inputHandler.SelectTarget(target);
+        }
+
+        public void OnPickOption(int optionId)
+        {
+            bool validMove = _dialogueInstance.MoveToOption(optionId);
+
+            if (validMove)
+                _optionsHandler.ClearOptions();
+
+            MoveStep(validMove);
+        }
+
+        public void OnCancelOption()
+        {
+            SelectInputTarget(_optionsHandler.GetOptionView(
+                _dialogueInstance.Current.CancelOption));
         }
     }
 }

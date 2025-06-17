@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
 
-namespace YamlDialogueUnity.View
+namespace YamlDialogueUnity
 {
     public class DialogueView : DialogueViewBase
     {    
@@ -9,8 +9,12 @@ namespace YamlDialogueUnity.View
         [SerializeField] private TMP_Text actorTxt;
         [SerializeField] private TMP_Text lineTxt;
         [SerializeField] private CanvasGroup group;
+        [Header("Options")]
         [SerializeField] private DialogueOptionView optionPrefab;
-        [SerializeField] private Transform optionsHolder;
+        [SerializeField] private Transform optionHolder;
+
+        public override DialogueOptionView OptionPrefab => optionPrefab;
+        public override Transform OptionsHolder => optionHolder;
 
         public override void UpdateView(string actor, string line, string[] actions)
         {
@@ -28,18 +32,6 @@ namespace YamlDialogueUnity.View
         {
             group.alpha = 0f;
             group.blocksRaycasts = group.interactable = false;
-        }
-
-        protected override void ClearOptions()
-        {
-            for (int i = 0; i < optionsHolder.childCount; i++)
-                if (optionsHolder.GetChild(i).gameObject != optionPrefab.gameObject)
-                    Destroy(optionsHolder.GetChild(i).gameObject, Time.deltaTime);
-        }
-
-        protected override void CreateOption(string optionTxt, int id)
-        {
-            optionPrefab.CreateInstance(optionsHolder, this, optionTxt, id);
         }
     }
 }
