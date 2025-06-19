@@ -456,6 +456,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: DialogueView (Simple) Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 1385282205047815818, guid: 701a1de2f7832bf438671f9dbd052c54, type: 3}
+      propertyPath: actorDatabase
+      value: 
+      objectReference: {fileID: 11400000, guid: a58764a00b9cbdd4a86a5b75a0d37a52, type: 2}
     - target: {fileID: 2562423260945078416, guid: 701a1de2f7832bf438671f9dbd052c54, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0

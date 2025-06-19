@@ -707,17 +707,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4915548192186392144, guid: ac78a30c6a76a8848b678818c4dbd88a, type: 3}
-      propertyPath: ease
-      value: 27
-      objectReference: {fileID: 0}
-    - target: {fileID: 4915548192186392144, guid: ac78a30c6a76a8848b678818c4dbd88a, type: 3}
-      propertyPath: duration
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4915548192186392144, guid: ac78a30c6a76a8848b678818c4dbd88a, type: 3}
-      propertyPath: showDuration
-      value: 0.25
-      objectReference: {fileID: 0}
+      propertyPath: actorDatabase
+      value: 
+      objectReference: {fileID: 11400000, guid: a58764a00b9cbdd4a86a5b75a0d37a52, type: 2}
     - target: {fileID: 5529516338072534657, guid: ac78a30c6a76a8848b678818c4dbd88a, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0

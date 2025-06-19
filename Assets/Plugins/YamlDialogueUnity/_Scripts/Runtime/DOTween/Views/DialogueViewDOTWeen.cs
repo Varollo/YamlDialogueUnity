@@ -1,4 +1,5 @@
 using DG.Tweening;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,59 +8,80 @@ namespace YamlDialogueUnity.DOTween
     public class DialogueViewDOTWeen : DialogueView
     {
         [Header("Transition Settings")]
-        [SerializeField] private float showDuration = 0.25f;
-        [SerializeField] private float charDuration = 0.015f;
-        [SerializeField] private Ease ease = Ease.InOutQuad;
+        [SerializeField] DialogueTweener.TweenSettings showTween = DialogueTweener.TweenSettings.GetDefault();
+        [SerializeField] DialogueTweener.TweenSettings hideTween = DialogueTweener.TweenSettings.GetDefault();
+        [SerializeField] DialogueTweener.TweenSettings showActorImgTween = DialogueTweener.TweenSettings.GetDefault();
+        [SerializeField] DialogueTweener.TweenSettings hideActorImgTween = DialogueTweener.TweenSettings.GetDefault();
+        [SerializeField] private float lineCharDuration = 0.015f;
+
+        private DialogueTweener _tweener;
 
         private Tween ActorTxtTween;
         private Tween LineTxtTween;
 
-        public override void UpdateView(string actor, string line, string[] actions)
+        protected override void Awake()
         {
-            if (!string.IsNullOrEmpty(actor))
-            {
-                if (actor != ActorTxt.text)
-                {
-                    ActorTxt.text = actor;
-                    ActorTxt.color = ActorTxt.color * new Color(1, 1, 1, 0);
-                    ActorTxtTween = ActorTxt.DOFade(1f,  .1f);
-                }
-            }
-            else ActorTxt.text = string.Empty;
+            base.Awake();
+            _tweener = new();
+        }
 
+        protected override void SetLineTxt(string line, TMP_Text lineTxt)
+        {
             if (!string.IsNullOrEmpty(line))
             {
-                LineTxtTween = LineTxt.DOFade(1, (line.Length - 1) * charDuration);
+                LineTxtTween = lineTxt.DOFade(1, (line.Length - 1) * lineCharDuration);
 
                 LineTxtTween.OnUpdate(() =>
                 {
-                    LineTxt.text = line[..(int)((line.Length - 1f) * LineTxtTween.ElapsedPercentage())];
+                    lineTxt.text = line[..(int)((line.Length - 1f) * LineTxtTween.ElapsedPercentage())];
                 });
 
                 LineTxtTween.OnComplete(() =>
                 {
-                    LineTxt.text = line;
+                    lineTxt.text = line;
                 });
             }
-            else LineTxt.text = string.Empty;
+            else lineTxt.text = string.Empty;
+        }
+
+        protected override void SetActorTxt(string actor, TMP_Text actorTxt)
+        {
+            if (!string.IsNullOrEmpty(actor))
+            {
+                if (actor != actorTxt.text)
+                {
+                    actorTxt.text = actor;
+                    actorTxt.color = new Color(actorTxt.color.r, 
+                                               actorTxt.color.g, 
+                                               actorTxt.color.b, 
+                                               a: 0);
+                    ActorTxtTween = actorTxt.DOFade(1f, .1f);
+                }
+            }
+            else actorTxt.text = string.Empty;
+        }
+
+        protected override void SetActorImage(string actor, ActorDatabaseSO actorDatabase, Image actorImg, bool actorChanged)
+        {            
+            if (actorChanged)
+            {
+                var showTween = _tweener.Tween(actorImg.transform, showActorImgTween).OnStart(() =>
+                {
+                    actorImg.sprite = actorDatabase.GetActorSprite(actor);
+                    actorImg.enabled = actorImg.sprite != null;
+                });
+                _tweener.Tween(actorImg.transform, hideActorImgTween).Append(showTween);
+            }
         }
 
         public override void OnShow()
         {
-            var panel = Group.transform as RectTransform;
-            var canvas = panel.GetComponentInParent<CanvasScaler>();
-
-            panel.anchoredPosition = new Vector2(panel.anchoredPosition.x, -canvas.referenceResolution.y * canvas.scaleFactor);
-            panel.DOAnchorPosY(0, showDuration).SetEase(ease);
+            _tweener.Tween(Group.transform, showTween);
         }
 
         public override void OnHide()
         {
-            var panel = Group.transform as RectTransform;
-            var canvas = panel.GetComponentInParent<CanvasScaler>();
-
-            panel.anchoredPosition = new Vector2(panel.anchoredPosition.x, 0);
-            panel.DOAnchorPosY(-canvas.referenceResolution.y * canvas.scaleFactor, showDuration).SetEase(ease);
+            _tweener.Tween(Group.transform, hideTween);
         }
 
         public override void OnSubmit()
@@ -69,7 +91,7 @@ namespace YamlDialogueUnity.DOTween
             if (skipTween |= ActorTxtTween != null && ActorTxtTween.active)
                 ActorTxtTween.Complete(true);
 
-            if (skipTween |= (LineTxtTween != null && LineTxtTween.active))
+            if (skipTween |= LineTxtTween != null && LineTxtTween.active)
                 LineTxtTween.Complete(true);
 
             if (!skipTween)

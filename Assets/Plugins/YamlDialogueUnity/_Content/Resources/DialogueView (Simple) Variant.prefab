@@ -186,11 +186,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d84f5599c69c2d408197435c47f94cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  actorDatabase: {fileID: 0}
+  optionPrefab: {fileID: 5043451595739338631}
+  optionHolder: {fileID: 795909209420653091}
+  actorImg: {fileID: 8987082774172421466}
   actorTxt: {fileID: 6630775225959760385}
   lineTxt: {fileID: 3765900722563327562}
   group: {fileID: 6832549219726678529}
-  optionPrefab: {fileID: 5043451595739338631}
-  optionHolder: {fileID: 795909209420653091}
 --- !u!114 &3765900722563327562 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2351370467781510099, guid: 81f8d7ab72929384f9cca34798c1853c, type: 3}
@@ -229,3 +231,14 @@ CanvasGroup:
   m_CorrespondingSourceObject: {fileID: 5345917253015469976, guid: 81f8d7ab72929384f9cca34798c1853c, type: 3}
   m_PrefabInstance: {fileID: 1504928203677902233}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8987082774172421466 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7519353385865472195, guid: 81f8d7ab72929384f9cca34798c1853c, type: 3}
+  m_PrefabInstance: {fileID: 1504928203677902233}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

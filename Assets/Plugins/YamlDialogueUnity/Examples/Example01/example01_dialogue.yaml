@@ -43,10 +43,10 @@
 - actor: Pinocchio
   line: If that indeed wasn't where he isn't. Even if he wasn't not were I knew he was could mean that I wouldn't completely not know where he wasn't.
 
-- actor: Pig \#1
+- actor: "Pig #1"
   line: Oh, enough! Shrek went off to bring back the next heir!
 
-- actor: Pig \#1
+- actor: "Pig #1"
   line: Oh!
   actions:
     - cover_mouth # The pig realizes his admission and immediately covers his mouth.
@@ -64,8 +64,8 @@
 - actor: Prince Charming
   line: Hook! Get rid of this new "King."
 
-- actor: Captain Hook
-  line: Right!
+# - actor: Captain Hook
+#   line: Right!
 
 - actor: Prince Charming
   line: But bring Shrek to me. I have something special in mind for him.
