@@ -5,8 +5,8 @@ namespace YamlDialogueUnity
 {
     public class DialogueController : IDialogueOptionsListener
     {
-        private readonly DialogueInputHandler _inputHandler;
         private readonly DialogueOptionsHandler _optionsHandler;
+        private readonly ViewSelectionHandler _selectionHandler;
         private readonly DialogueViewBase _dialogueView;
         
         private YamlDialogue _dialogueInstance;
@@ -14,7 +14,7 @@ namespace YamlDialogueUnity
         public DialogueController(DialogueViewBase dialogueView)
         {
             _dialogueView = dialogueView;
-            _inputHandler = new DialogueInputHandler();
+            _selectionHandler = new ViewSelectionHandler();
             _optionsHandler = new DialogueOptionsHandler(dialogueView.OptionPrefab, dialogueView.OptionsHolder);
 
             _optionsHandler.AddListener(this);
@@ -48,7 +48,7 @@ namespace YamlDialogueUnity
 
             _dialogueView.UpdateView(step.Actor, step.Line, step.Actions);
 
-            IDialogueInputTarget target = _dialogueView;
+            SelectableView target = _dialogueView;
 
             if (step.HasOptions)
             {
@@ -58,25 +58,19 @@ namespace YamlDialogueUnity
                 target = _optionsHandler.GetOptionView(step.ConfirmOption);
             }     
 
-            SelectInputTarget(target);
+            _selectionHandler.SelectView(target);
         }
 
         private void EndDialogue()
         {
             _dialogueView.Hide();
-            _inputHandler.SelectTarget(null);
         }
 
 
         public void DropDialogue()
         {
-            SelectInputTarget(null);
+            _selectionHandler.SelectView(null);
             _dialogueInstance = null;
-        }
-
-        public void SelectInputTarget(IDialogueInputTarget target)
-        {
-            _inputHandler.SelectTarget(target);
         }
 
         public void OnPickOption(int optionId)
@@ -91,8 +85,13 @@ namespace YamlDialogueUnity
 
         public void OnCancelOption()
         {
-            SelectInputTarget(_optionsHandler.GetOptionView(
+            _selectionHandler.SelectView(_optionsHandler.GetOptionView(
                 _dialogueInstance.Current.CancelOption));
+        }
+
+        public void OnSelectOptionView(DialogueOptionView view)
+        {
+            _selectionHandler.SelectView(view);
         }
     }
 }

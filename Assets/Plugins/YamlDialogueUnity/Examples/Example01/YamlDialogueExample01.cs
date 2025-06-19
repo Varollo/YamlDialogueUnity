@@ -3,7 +3,7 @@ using YamlDialogueUnity;
 
 public class YamlDialogueExample01 : MonoBehaviour
 {
-    [SerializeField] private DialogueView dialogueView;
+    [SerializeField] private DialogueViewBase dialogueView;
     [SerializeField] private TextAsset dialogueFile;
 
     [ContextMenu("Play Dialogue")]

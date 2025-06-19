@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 
 namespace YamlDialogueUnity
 {
-    public class DialogueOptionView : MonoBehaviour, IDialogueInputTarget
+    public class DialogueOptionView : SelectableView, ISelectHandler
     {
         [SerializeField] private TMP_Text optionTxt;
         [SerializeField] private Button optionBtn;
@@ -30,17 +30,19 @@ namespace YamlDialogueUnity
             Destroy(gameObject);
         }
 
-        public void OnCancel(BaseEventData eventData)
+        public override void OnCancel()
         {
             _handler.SelectCancelOption();
         }
 
-        public void OnSubmit(BaseEventData eventData)
+        public override void OnSubmit()
         {
             _handler.PickOption(_optionId);
         }
 
-        public virtual void OnDeselect() { }
-        public virtual void OnSelect() { }
+        void ISelectHandler.OnSelect(BaseEventData eventData)
+        {
+            _handler.SelectOptionView(this);
+        }
     }
 }

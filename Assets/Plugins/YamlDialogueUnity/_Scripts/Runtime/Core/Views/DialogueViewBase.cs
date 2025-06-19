@@ -1,25 +1,18 @@
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 namespace YamlDialogueUnity
 {
-    public abstract class DialogueViewBase : MonoBehaviour, IDialogueInputTarget
+    public abstract class DialogueViewBase : SelectableView
     {
         private DialogueController _controller;
 
         public abstract DialogueOptionView OptionPrefab { get; }
         public abstract Transform OptionsHolder { get; }
 
-        protected virtual void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             _controller = new DialogueController(this);
-        }
-
-        protected virtual void OnEnable()
-        {            
-            if (EventSystem.current != null)
-                EventSystem.current.SetSelectedGameObject(gameObject);
         }
 
         public void Next()
@@ -45,17 +38,10 @@ namespace YamlDialogueUnity
             OnHide();
         }
 
-        private void AdvanceIfSelected(GameObject selected)
+        public override void OnSubmit()
         {
-            if (selected == gameObject)
-                Next();
+            Next();
         }
-
-        public virtual void OnSubmit(BaseEventData eventData) => AdvanceIfSelected(eventData.selectedObject);
-        public virtual void OnCancel(BaseEventData eventData) => AdvanceIfSelected(eventData.selectedObject);
-
-        public virtual void OnSelect() { }
-        public virtual void OnDeselect() { }
 
         public virtual void OnHide() { }
         public virtual void OnShow() { }
