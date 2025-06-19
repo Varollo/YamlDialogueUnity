@@ -44,6 +44,12 @@ namespace YamlDialogueUnity
                 listener.OnPickOption(id);
         }
 
+        public void SelectOptionView(DialogueOptionView view)
+        {
+            foreach(var listener in _listeners)
+                listener.OnSelectOptionView(view);
+        }
+
         public void SelectCancelOption()
         {
             foreach (var listener in _listeners)

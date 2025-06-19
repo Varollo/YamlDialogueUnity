@@ -15,23 +15,27 @@ namespace YamlDialogueUnity
 
         public override DialogueOptionView OptionPrefab => optionPrefab;
         public override Transform OptionsHolder => optionHolder;
+        
+        protected TMP_Text ActorTxt => actorTxt;
+        protected TMP_Text LineTxt => lineTxt;
+        protected CanvasGroup Group => group;
 
         public override void UpdateView(string actor, string line, string[] actions)
         {
-            actorTxt.text = actor;
-            lineTxt.text = line;
+            ActorTxt.text = actor;
+            LineTxt.text = line;
         }
 
         public override void OnShow()
         {
-            group.alpha = 1.0f;
-            group.blocksRaycasts = group.interactable = true;            
+            Group.alpha = 1.0f;
+            Group.blocksRaycasts = Group.interactable = true;            
         }
 
         public override void OnHide()
         {
-            group.alpha = 0f;
-            group.blocksRaycasts = group.interactable = false;
+            Group.alpha = 0f;
+            Group.blocksRaycasts = Group.interactable = false;
         }
     }
 }
