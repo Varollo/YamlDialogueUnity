@@ -8,11 +8,12 @@ namespace YamlDialogueUnity
     {
         [Header("Configuration")]
         [SerializeField] private ActorDatabaseSO actorDatabase;
+        [SerializeField, Range(0,2)] private int maxActors;
         [Header("Options")]
         [SerializeField] private DialogueOptionView optionPrefab;
         [SerializeField] private Transform optionHolder;
         [Header("References")]
-        [SerializeField] private Image actorImg;
+        [SerializeField] private DialogueActorView actorView;
         [SerializeField] private TMP_Text actorTxt;
         [SerializeField] private TMP_Text lineTxt;
         [SerializeField] private CanvasGroup group;
@@ -24,7 +25,7 @@ namespace YamlDialogueUnity
 
         public override void UpdateView(string actor, string line, string[] actions)
         {
-            SetActorImage(actor, actorDatabase, actorImg, actor != actorTxt.text);
+            actorView.SetActor(actorDatabase, actor, maxActors);
             SetActorTxt(actor, actorTxt);
             SetLineTxt(line, lineTxt);
         }
