@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using UnityEngine;
 
 namespace YamlDialogueUnity
@@ -5,15 +7,25 @@ namespace YamlDialogueUnity
     public abstract class DialogueViewBase : SelectableView
     {
         private DialogueController _controller;
+        private CanvasGroup _mainCanvasGroup;
 
-        public abstract DialogueOptionView OptionPrefab { get; }
-        public abstract Transform OptionsHolder { get; }
+        public bool IsActive { get; private set; }
+
+        protected CanvasGroup GetCanvasGroup() => _mainCanvasGroup;
 
         protected override void Awake()
         {
             base.Awake();
-            _controller = new DialogueController(this);
+            _controller = CreateController();
+
+            _mainCanvasGroup = gameObject.AddComponent<CanvasGroup>();
+            _mainCanvasGroup.hideFlags = HideFlags.HideInInspector;
+            
+            _mainCanvasGroup.alpha = 0;
+            _mainCanvasGroup.interactable = false;
+            _mainCanvasGroup.blocksRaycasts = false;
         }
+
 
         public void Next()
         {
@@ -22,20 +34,43 @@ namespace YamlDialogueUnity
 
         public void Show(string dialogueStr)
         {
-            if (!isActiveAndEnabled)
+            void showDialogue()
             {
-                gameObject.SetActive(true);
-                enabled = true;
+                _mainCanvasGroup.alpha = 1;
+                _mainCanvasGroup.interactable = true;
+                _mainCanvasGroup.blocksRaycasts = true;
+
+                StartCoroutine(CallbackCo(OnShow(), () =>
+                {
+                    _controller.InitDialogue(dialogueStr);
+                }));
             }
 
-            _controller.InitDialogue(dialogueStr);
-            OnShow();
+            if (!IsActive)
+                showDialogue();
+            else
+                Hide(afterHide: showDialogue);
+
+            IsActive = true;
         }
 
-        public void Hide()
+        public void Hide() => Hide(null);
+        private void Hide(Action afterHide)
         {
-            _controller.DropDialogue();
-            OnHide();
+            _controller.EndDialogue();
+
+            StartCoroutine(CallbackCo(OnHide(), () =>
+            {
+                afterHide?.Invoke();
+            }));
+
+            IsActive = false;
+        }
+
+        private IEnumerator CallbackCo(IEnumerator coroutine, Action callback)
+        {
+            yield return StartCoroutine(coroutine);
+            callback?.Invoke();
         }
 
         public override void OnSubmit()
@@ -43,9 +78,20 @@ namespace YamlDialogueUnity
             Next();
         }
 
-        public virtual void OnHide() { }
-        public virtual void OnShow() { }
+        public virtual IEnumerator OnHide() 
+        { 
+            yield break; 
+        }
 
+        public virtual IEnumerator OnShow()
+        {
+            yield break;
+        }
+
+        public abstract int GetMaxActors();
+        public abstract ActorDatabaseSO GetActorDatabase();
+        protected abstract DialogueController CreateController();
+        public abstract DialogueOptionsHandler CreateOptionsHandler();
         public abstract void UpdateView(string actor, string line, string[] actions);
     }
 }

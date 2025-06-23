@@ -6,25 +6,32 @@ namespace YamlDialogueUnity
     public class DialogueController : IDialogueOptionsListener
     {
         private readonly DialogueOptionsHandler _optionsHandler;
+        private readonly DialogueActionsHandler _actionsHandler;
         private readonly ViewSelectionHandler _selectionHandler;
+
         private readonly DialogueViewBase _dialogueView;
+        private readonly DialogueActorViewBase _actorView;
         
         private YamlDialogue _dialogueInstance;
 
-        public DialogueController(DialogueViewBase dialogueView)
+        public DialogueController(DialogueViewBase dialogueView, DialogueActorViewBase actorView)
         {
             _dialogueView = dialogueView;
+            _actorView = actorView;
+
+            _optionsHandler = dialogueView.CreateOptionsHandler();
+            _actionsHandler = new DialogueActionsHandler();
             _selectionHandler = new ViewSelectionHandler();
-            _optionsHandler = new DialogueOptionsHandler(dialogueView.OptionPrefab, dialogueView.OptionsHolder);
 
             _optionsHandler.AddListener(this);
         }
 
-        public bool IsActive { get; internal set; }
-
         public void InitDialogue(string dialogueYaml)
         {
             _dialogueInstance = YamlDialogueParser.Parse(dialogueYaml);
+            
+            _actorView.Initialize(_actionsHandler);
+
             OnNextStep();
         }
 
@@ -34,12 +41,12 @@ namespace YamlDialogueUnity
                 MoveStep(_dialogueInstance.MoveNext());
         }
 
-        private void MoveStep(bool canMove)
+        private void MoveStep(bool canMoveNext)
         {
-            if (canMove)
+            if (canMoveNext)
                 OnNextStep();
             else
-                EndDialogue();
+                _dialogueView.Hide();
         }
 
         private void OnNextStep()
@@ -47,6 +54,7 @@ namespace YamlDialogueUnity
             var step = _dialogueInstance.Current;
 
             _dialogueView.UpdateView(step.Actor, step.Line, step.Actions);
+            _actorView.SetActor(_dialogueView.GetActorDatabase(), step.Actor, _dialogueView.GetMaxActors());
 
             SelectableView target = _dialogueView;
 
@@ -56,20 +64,21 @@ namespace YamlDialogueUnity
                     step.Options.Select(o => o.Text).ToArray());
 
                 target = _optionsHandler.GetOptionView(step.ConfirmOption);
-            }     
+            }
+
+            if (step.Actions != null && step.Actions.Length > 0)
+                _actionsHandler.BroadcastActions(step.Actions);
 
             _selectionHandler.SelectView(target);
         }
 
-        private void EndDialogue()
-        {
-            _dialogueView.Hide();
-        }
+        public void EndDialogue()
+        {            
+            _actorView.Clear();
+            _optionsHandler.Clear();            
 
-
-        public void DropDialogue()
-        {
             _selectionHandler.SelectView(null);
+
             _dialogueInstance = null;
         }
 
@@ -78,7 +87,7 @@ namespace YamlDialogueUnity
             bool validMove = _dialogueInstance.MoveToOption(optionId);
 
             if (validMove)
-                _optionsHandler.ClearOptions();
+                _optionsHandler.Clear();
 
             MoveStep(validMove);
         }

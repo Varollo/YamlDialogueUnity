@@ -164,6 +164,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1968854694003833874, guid: 81f8d7ab72929384f9cca34798c1853c, type: 3}
       insertIndex: 1
       addedObject: {fileID: 4915548192186392144}
+    - targetCorrespondingSourceObject: {fileID: 3485780038691308244, guid: 81f8d7ab72929384f9cca34798c1853c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4057446176275323617}
   m_SourcePrefab: {fileID: 100100000, guid: 81f8d7ab72929384f9cca34798c1853c, type: 3}
 --- !u!114 &3084604213657334166 stripped
 MonoBehaviour:
@@ -174,6 +177,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe99c778a1343f642af8545c4efa232f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3096994334050362513 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5848883420147771161, guid: 81f8d7ab72929384f9cca34798c1853c, type: 3}
+  m_PrefabInstance: {fileID: 8922144932612555656}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!225 &3594242907574516752 stripped
@@ -192,6 +206,50 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &5444335116308152668 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3485780038691308244, guid: 81f8d7ab72929384f9cca34798c1853c, type: 3}
+  m_PrefabInstance: {fileID: 8922144932612555656}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4057446176275323617
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5444335116308152668}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aef856183ba32ba409706dfcaa2b049e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  actorImgs:
+  - {fileID: 7441468003975947359}
+  - {fileID: 3096994334050362513}
+  showTween:
+    TweenType: 8
+    Intensity: 1
+    Reverse: 0
+    Duration: 0.25
+    Ease: 6
+  hideTween:
+    TweenType: 8
+    Intensity: 1.5
+    Reverse: 1
+    Duration: 0.25
+    Ease: 6
+  focusTween:
+    TweenType: 256
+    Intensity: 1
+    Reverse: 0
+    Duration: 0.25
+    Ease: 7
+  unfocusTween:
+    TweenType: 256
+    Intensity: 0.9
+    Reverse: 1
+    Duration: 0.25
+    Ease: 7
 --- !u!114 &6588886583009230939 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2351370467781510099, guid: 81f8d7ab72929384f9cca34798c1853c, type: 3}
@@ -220,33 +278,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e377b1579e297b74381b1d847568f9eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxActors: 0
   actorDatabase: {fileID: 0}
+  actorView: {fileID: 4057446176275323617}
   optionPrefab: {fileID: 3084604213657334166}
   optionHolder: {fileID: 7221773261206881330}
-  actorImg: {fileID: 7441468003975947359}
+  dialogueBoxPanel: {fileID: 3594242907574516752}
   actorTxt: {fileID: 3690270393447654416}
   lineTxt: {fileID: 6588886583009230939}
-  group: {fileID: 3594242907574516752}
+  OnStep:
+    m_PersistentCalls:
+      m_Calls: []
+  OnActions:
+    m_PersistentCalls:
+      m_Calls: []
   showTween:
     TweenType: 1
+    Intensity: 2.25
     Reverse: 0
     Duration: 0.25
     Ease: 27
   hideTween:
     TweenType: 1
+    Intensity: 2.25
     Reverse: 1
-    Duration: 0.25
-    Ease: 26
-  showActorImgTween:
-    TweenType: 88
-    Reverse: 0
     Duration: 0.5
-    Ease: 27
-  hideActorImgTween:
-    TweenType: 88
-    Reverse: 1
-    Duration: 0.3
-    Ease: 8
+    Ease: 26
   lineCharDuration: 0.015
 --- !u!224 &7221773261206881330 stripped
 RectTransform:

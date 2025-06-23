@@ -4,9 +4,9 @@ namespace YamlDialogueUnity
 {
     public class DialogueActorView : DialogueActorViewBase
     {
-        protected override DialogueActorController Initialize(int imgCount)
+        protected override DialogueActorController CreateController(int imgCount, DialogueActionsHandler actionsHandler)
         {
-            return new(this, imgCount);
+            return new DialogueActorController(this, imgCount, actionsHandler);
         }
 
         public override void OnFocusSlot(int slotId)
@@ -24,7 +24,7 @@ namespace YamlDialogueUnity
         public override void OnFillSlot(int slotId, Sprite actorSprite)
         {
             GetActorImg(slotId).sprite = actorSprite;
-            GetActorImg(slotId).enabled = true;
+            GetActorImg(slotId).enabled = actorSprite != null;
         }
 
         public override void OnClearSlot(int slotId)

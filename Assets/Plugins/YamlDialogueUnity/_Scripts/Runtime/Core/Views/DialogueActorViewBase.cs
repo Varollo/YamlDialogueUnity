@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,9 +10,10 @@ namespace YamlDialogueUnity
         
         private DialogueActorController _controller;
 
-        private void Awake()
+        public void Initialize(DialogueActionsHandler actionsHandler)
         {
-            _controller = Initialize(actorImgs.Length);
+            _controller = CreateController(actorImgs.Length, actionsHandler);
+            
         }
 
         protected Image GetActorImg(int id)
@@ -22,12 +24,15 @@ namespace YamlDialogueUnity
         public void SetActor(ActorDatabaseSO database, string actorName, int maxActors)
         {
             Sprite actorSprite = database.GetActorSprite(actorName);
-
-            if (actorSprite != null)
-                _controller.SetActor(actorSprite, actorName, maxActors);
+            _controller.SetActor(actorSprite, actorName, maxActors);
         }
 
-        protected abstract DialogueActorController Initialize(int imgCount);
+        public void Clear()
+        {
+            _controller.Clear();
+        }
+
+        protected abstract DialogueActorController CreateController(int imgCount, DialogueActionsHandler actionsHandler);
         public abstract void OnClearSlot(int slotId);
         public abstract void OnFillSlot(int slotId, Sprite actorSprite);
         public abstract void OnFocusSlot(int slotId);

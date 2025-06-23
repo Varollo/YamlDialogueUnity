@@ -200,14 +200,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d84f5599c69c2d408197435c47f94cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actorDatabase: {fileID: 0}
   maxActors: 2
+  actorDatabase: {fileID: 0}
+  actorView: {fileID: 6768079689582673869}
   optionPrefab: {fileID: 5043451595739338631}
   optionHolder: {fileID: 795909209420653091}
-  actorView: {fileID: 6768079689582673869}
+  dialogueBoxPanel: {fileID: 6832549219726678529}
   actorTxt: {fileID: 6630775225959760385}
   lineTxt: {fileID: 3765900722563327562}
-  group: {fileID: 6832549219726678529}
+  OnStep:
+    m_PersistentCalls:
+      m_Calls: []
+  OnActions:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &2647393378662606669 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3485780038691308244, guid: 81f8d7ab72929384f9cca34798c1853c, type: 3}

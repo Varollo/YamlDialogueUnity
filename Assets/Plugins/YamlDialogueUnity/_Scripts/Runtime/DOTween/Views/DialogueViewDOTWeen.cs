@@ -1,7 +1,7 @@
 using DG.Tweening;
+using System.Collections;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace YamlDialogueUnity.DOTween
 {
@@ -10,14 +10,13 @@ namespace YamlDialogueUnity.DOTween
         [Header("Transition Settings")]
         [SerializeField] DialogueTweener.TweenSettings showTween = DialogueTweener.TweenSettings.GetDefault();
         [SerializeField] DialogueTweener.TweenSettings hideTween = DialogueTweener.TweenSettings.GetDefault();
-        [SerializeField] DialogueTweener.TweenSettings showActorImgTween = DialogueTweener.TweenSettings.GetDefault();
-        [SerializeField] DialogueTweener.TweenSettings hideActorImgTween = DialogueTweener.TweenSettings.GetDefault();
         [SerializeField] private float lineCharDuration = 0.015f;
 
         private DialogueTweener _tweener;
 
-        private Tween ActorTxtTween;
-        private Tween LineTxtTween;
+        private Tween _actorTxtTween;
+        private Tween _lineTxtTween;
+        private Tween _panelTween;
 
         protected override void Awake()
         {
@@ -29,14 +28,14 @@ namespace YamlDialogueUnity.DOTween
         {
             if (!string.IsNullOrEmpty(line))
             {
-                LineTxtTween = lineTxt.DOFade(1, (line.Length - 1) * lineCharDuration);
+                _lineTxtTween = lineTxt.DOFade(1, (line.Length - 1) * lineCharDuration);
 
-                LineTxtTween.OnUpdate(() =>
+                _lineTxtTween.OnUpdate(() =>
                 {
-                    lineTxt.text = line[..(int)((line.Length - 1f) * LineTxtTween.ElapsedPercentage())];
+                    lineTxt.text = line[..(int)((line.Length - 1f) * _lineTxtTween.ElapsedPercentage())];
                 });
 
-                LineTxtTween.OnComplete(() =>
+                _lineTxtTween.OnComplete(() =>
                 {
                     lineTxt.text = line;
                 });
@@ -55,44 +54,41 @@ namespace YamlDialogueUnity.DOTween
                                                actorTxt.color.g, 
                                                actorTxt.color.b, 
                                                a: 0);
-                    ActorTxtTween = actorTxt.DOFade(1f, .1f);
+                    _actorTxtTween = actorTxt.DOFade(1f, .1f);
                 }
             }
             else actorTxt.text = string.Empty;
         }
 
-        protected override void SetActorImage(string actor, ActorDatabaseSO actorDatabase, Image actorImg, bool actorChanged)
-        {            
-            if (actorChanged)
-            {
-                var showTween = _tweener.Tween(actorImg.transform, showActorImgTween).OnStart(() =>
-                {
-                    actorImg.sprite = actorDatabase.GetActorSprite(actor);
-                    actorImg.enabled = actorImg.sprite != null;
-                });
-                _tweener.Tween(actorImg.transform, hideActorImgTween).Append(showTween);
-            }
+        public override IEnumerator OnShow()
+        {
+            if (_panelTween != null && _panelTween.IsPlaying())
+                _panelTween.Complete(true);
+
+            yield return base.OnShow();
+            yield return (_panelTween = _tweener.Tween(
+                GetCanvasGroup().transform, showTween)).WaitForCompletion();
         }
 
-        public override void OnShow()
+        public override IEnumerator OnHide()
         {
-            _tweener.Tween(Group.transform, showTween);
-        }
+            if (_panelTween != null && _panelTween.IsPlaying())
+                _panelTween.Complete(true);
 
-        public override void OnHide()
-        {
-            _tweener.Tween(Group.transform, hideTween);
+            yield return (_panelTween = _tweener.Tween(GetCanvasGroup().transform, hideTween))
+                .WaitForCompletion();
+            yield return base.OnHide();
         }
 
         public override void OnSubmit()
         {
             bool skipTween = false;
 
-            if (skipTween |= ActorTxtTween != null && ActorTxtTween.active)
-                ActorTxtTween.Complete(true);
+            if (skipTween |= _actorTxtTween != null && _actorTxtTween.active)
+                _actorTxtTween.Complete(true);
 
-            if (skipTween |= LineTxtTween != null && LineTxtTween.active)
-                LineTxtTween.Complete(true);
+            if (skipTween |= _lineTxtTween != null && _lineTxtTween.active)
+                _lineTxtTween.Complete(true);
 
             if (!skipTween)
                 base.OnSubmit();

@@ -1,77 +1,85 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace YamlDialogueUnity
 {
-    public class DialogueActorController
+    public class DialogueActorController : IDialogueActionListener
     {
         private readonly Dictionary<string, int> _actorIdMap = new();
         private readonly IDialogueActorListener _listener;
         private readonly int _imgCount;
 
+        public string[] _actorSlots;
+        private int? _focusedSlot;
         private int _nextSlot;
 
-        public DialogueActorController(IDialogueActorListener view, int imgCount)
+        public DialogueActorController(IDialogueActorListener view, int imgCount, DialogueActionsHandler actionsHandler)
         {
             _listener = view;
             _imgCount = imgCount;
 
-            ActorSlots = new string[_imgCount];
+            _actorSlots = new string[_imgCount];
+            
+            actionsHandler.AddListener(this, "actorview_clear");
         }
-
-        public string[] ActorSlots { get; private set; }
-
-        private bool IsFree(int slotId) => string.IsNullOrEmpty(ActorSlots[slotId]);
 
         public void SetActor(Sprite actorSprite, string actorName, int maxActors)
         {            
-            if (!ValidateSetActor(actorName, maxActors, actorSprite))
+            if (!ValidateMaxActors(maxActors))
                 return;
 
-            if (_actorIdMap.TryGetValue(actorName, out var id))
-                ActivateSlot(id);
-            else
+            // No actor => Unfocus
+            if (string.IsNullOrEmpty(actorName))
+                UnfocusSlot();
+
+            // Actor not slotted, or actor slot is filled => fill slot with actor
+            else if (!_actorIdMap.TryGetValue(actorName, out var id)
+            || (_actorSlots[id] != actorName))
                 FillSlot(_nextSlot, actorName, actorSprite);
+
+            // Actor is slotted but not focused => focus actor
+            else if (id != _focusedSlot)
+                FocusSlot(id);
         }
 
-        private void ActivateSlot(int slotId)
+        private void FocusSlot(int slotId)
         {
-            _nextSlot = (slotId + 1) % ActorSlots.Length;
+            UnfocusSlot();
             _listener.OnFocusSlot(slotId);
 
-            for (int i = 0; i < ActorSlots.Length; i++)
-                if (i != slotId && !IsFree(i))
-                    _listener.OnUnfocusSlot(i);
+            _nextSlot = (slotId + 1) % _actorSlots.Length;
+            _focusedSlot = slotId;
+        }
+
+        private void UnfocusSlot()
+        {
+            if (!_focusedSlot.HasValue)
+                return;
+
+            _listener.OnUnfocusSlot(_focusedSlot.Value);
+            _focusedSlot = null;
         }
 
         private void FillSlot(int slotId, string actorName, Sprite actorSprite)
         {
-            if (!IsFree(slotId))
+            if (!_actorIdMap.TryAdd(actorName, slotId))
+                slotId = _actorIdMap[actorName];
+
+            if (!string.IsNullOrEmpty(_actorSlots[slotId]))
                 ClearSlot(slotId);
 
-            _actorIdMap.Add(actorName, slotId);
-            ActorSlots[slotId] = actorName;
+            if (_actorSlots[slotId] != actorName)
+                _listener.OnFillSlot(slotId, actorSprite);
             
-            _listener.OnFillSlot(slotId, actorSprite);
-            ActivateSlot(slotId);
+            _actorSlots[slotId] = actorName;
+            FocusSlot(slotId);
         }
 
         private void ClearSlot(int slotId)
         {
-            if (IsFree(slotId))
-                return;
-
-            _actorIdMap.Remove(ActorSlots[slotId]);
-            ActorSlots[slotId] = string.Empty;
-            
+            _actorSlots[slotId] = string.Empty;
             _listener.OnClearSlot(slotId);
-        }
-
-        private bool ValidateSetActor(string actorName, int maxActors, Sprite actorSprite)
-        {
-            return ValidateActorName(actorName)
-                && ValidateMaxActors(maxActors)
-                && ValidateActorSprite(actorSprite);
         }
 
         private bool ValidateMaxActors(int maxActors)
@@ -82,33 +90,36 @@ namespace YamlDialogueUnity
                 return false;
             }
 
-            if (maxActors < ActorSlots.Length)
-            {
+            if (maxActors < _actorSlots.Length)
                 TrimSlots(maxActors);
 
-                if (maxActors == 0)
-                    return false;
-            }
+            if (maxActors == 0)
+                return false;
 
             return true;
         }
 
-        private static bool ValidateActorSprite(Sprite actorSprite)
-        {
-            return actorSprite != null;
-        }
-
-        private static bool ValidateActorName(string actorName)
-        {
-            return !string.IsNullOrEmpty(actorName);
-        }
-
         private void TrimSlots(int maxActors)
         {
-            for (int i = maxActors; i < ActorSlots.Length; ++i)
+            for (int i = _actorSlots.Length - 1; i > maxActors; --i)
                 ClearSlot(i);
             
             _nextSlot %= maxActors;
+        }
+
+        public void OnDialogueAction(string action)
+        {
+            if (action == "actorview_clear")
+                for (int i = 0; i < _actorSlots.Length; i++)
+                    ClearSlot(i);
+        }
+
+        public void Clear()
+        {
+            for (int i = _actorSlots.Length - 1; i >= 0; i--)
+                ClearSlot(i);
+
+            _actorIdMap.Clear();
         }
     }
 }

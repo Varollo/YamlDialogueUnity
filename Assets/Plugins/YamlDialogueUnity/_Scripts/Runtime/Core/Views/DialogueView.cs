@@ -1,33 +1,46 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.Events;
+using System.Collections;
 
 namespace YamlDialogueUnity
 {
     public class DialogueView : DialogueViewBase
     {
-        [Header("Configuration")]
-        [SerializeField] private ActorDatabaseSO actorDatabase;
+        [System.Serializable] public class DialogueStepEvent : UnityEvent<string, string, string[]> { }
+        [System.Serializable] public class DialogueActionsEvent : UnityEvent<string[]> { }
+
+        [Header("Actor")]
         [SerializeField, Range(0,2)] private int maxActors;
+        [SerializeField] private ActorDatabaseSO actorDatabase;
+        [SerializeField] private DialogueActorView actorView;
         [Header("Options")]
         [SerializeField] private DialogueOptionView optionPrefab;
         [SerializeField] private Transform optionHolder;
-        [Header("References")]
-        [SerializeField] private DialogueActorView actorView;
+        [Header("Dialogue Box")]
+        [SerializeField] private CanvasGroup dialogueBoxPanel;
         [SerializeField] private TMP_Text actorTxt;
         [SerializeField] private TMP_Text lineTxt;
-        [SerializeField] private CanvasGroup group;
+        [Header("Events")]
+        public DialogueStepEvent OnStep;
+        public DialogueActionsEvent OnActions;
 
-        public override DialogueOptionView OptionPrefab => optionPrefab;
-        public override Transform OptionsHolder => optionHolder;
+        public override int GetMaxActors() => maxActors;
+        public override ActorDatabaseSO GetActorDatabase() => actorDatabase;
         
-        protected CanvasGroup Group => group;
+        protected override DialogueController CreateController() => new(this, actorView);
+        public override DialogueOptionsHandler CreateOptionsHandler() => new(optionPrefab, optionHolder);
 
         public override void UpdateView(string actor, string line, string[] actions)
         {
-            actorView.SetActor(actorDatabase, actor, maxActors);
             SetActorTxt(actor, actorTxt);
             SetLineTxt(line, lineTxt);
+
+            OnStep?.Invoke(actor, line, actions);
+
+            if (actions != null && actions.Length > 0)
+                OnActions?.Invoke(actions);
         }
 
         protected virtual void SetLineTxt(string line, TMP_Text lineTxt)
@@ -51,16 +64,20 @@ namespace YamlDialogueUnity
                 actorImg.sprite = actorSprite;
         }
 
-        public override void OnShow()
+        public override IEnumerator OnShow()
         {
-            Group.alpha = 1.0f;
-            Group.blocksRaycasts = Group.interactable = true;            
+            dialogueBoxPanel.alpha = 1.0f;
+            dialogueBoxPanel.blocksRaycasts = dialogueBoxPanel.interactable = true;
+            actorTxt.text = string.Empty;
+            lineTxt.text = string.Empty;
+            yield break;
         }
 
-        public override void OnHide()
+        public override IEnumerator OnHide()
         {
-            Group.alpha = 0f;
-            Group.blocksRaycasts = Group.interactable = false;
+            dialogueBoxPanel.alpha = 0f;
+            dialogueBoxPanel.blocksRaycasts = dialogueBoxPanel.interactable = false;
+            yield break;
         }
     }
 }

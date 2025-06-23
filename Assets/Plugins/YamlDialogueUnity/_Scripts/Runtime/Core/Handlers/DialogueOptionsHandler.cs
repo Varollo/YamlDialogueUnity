@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 namespace YamlDialogueUnity
 {
@@ -31,13 +32,6 @@ namespace YamlDialogueUnity
                     _optionsHolder, this, options[i], i));
         }
 
-        public void ClearOptions()
-        {
-            for (int i = 0; i < _optionViews.Count; i++)
-                _optionViews[i].Destroy();
-            _optionViews.Clear();
-        }
-
         public void PickOption(int id)
         {
             foreach(var listener in _listeners)
@@ -66,6 +60,13 @@ namespace YamlDialogueUnity
             _listeners.Remove(listener);
         }
 
+        public void Clear()
+        {
+            for (int i = 0; i < _optionViews.Count; i++)
+                _optionViews[i].Destroy();
+            _optionViews.Clear();
+        }
+
         protected virtual void Dispose(bool disposing)
         {
             if (!_isDisposed)
@@ -76,7 +77,7 @@ namespace YamlDialogueUnity
                     _optionViews.Clear();
                 }
 
-                ClearOptions();
+                Clear();
 
                 _isDisposed = true;
             }

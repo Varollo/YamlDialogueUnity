@@ -82,5 +82,7 @@
     - text: "Yes"
       target: START
     - text: "No"
+  actions:
+    - actorview_clear
 
 - line: THE END
