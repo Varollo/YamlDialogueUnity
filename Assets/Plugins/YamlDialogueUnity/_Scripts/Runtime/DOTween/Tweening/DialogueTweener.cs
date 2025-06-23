@@ -6,7 +6,7 @@ namespace YamlDialogueUnity.DOTween
 {
     public partial class DialogueTweener
     {
-        public Sequence Tween(Transform target, TweenSettings settings)
+        public Sequence Tween(Transform target, TweenSettings settings, bool killExisting = false)
         {
             var seq = DG.Tweening.DOTween.Sequence(target);
             
@@ -14,7 +14,7 @@ namespace YamlDialogueUnity.DOTween
             {
                 if (settings.TweenType.HasFlag(tweenType))
                 {
-                    var tween = _tweenMap[tweenType]?.Invoke(target, settings.Duration, settings.Reverse);
+                    var tween = _tweenMap[tweenType]?.Invoke(target, settings.Intensity, settings.Duration, settings.Reverse);
 
                     if (tween != null)
                         seq.Join(tween.SetEase(settings.Ease));
@@ -24,10 +24,11 @@ namespace YamlDialogueUnity.DOTween
             return seq;
         }
 
-        [System.Serializable]
+        [Serializable]
         public class TweenSettings
         {
             public TweenType TweenType;
+            public float Intensity;
             public bool Reverse;
             public float Duration;
             public Ease Ease;
@@ -37,6 +38,7 @@ namespace YamlDialogueUnity.DOTween
                 return new TweenSettings()
                 {
                     TweenType = TweenType.SlideUp,
+                    Intensity = 1f,
                     Reverse = false,
                     Duration = .25f,
                     Ease = Ease.InOutQuad
@@ -47,15 +49,16 @@ namespace YamlDialogueUnity.DOTween
         [Serializable, Flags]
         public enum TweenType
         {
-            None       = 0x00,
-            SlideUp    = 0x01, 
-            SlideDown  = 0x02,
-            SlideLeft  = 0x04,
-            SlideRight = 0x08,
-            ScaleUp    = 0x10,
-            ScaleDown  = 0x20,
-            RotateCW   = 0x40, 
-            RotateCCW  = 0x80
+            None       = 0x000,
+            SlideUp    = 0x001, 
+            SlideDown  = 0x002,
+            SlideLeft  = 0x004,
+            SlideRight = 0x008,
+            ScaleUp    = 0x010,
+            ScaleDown  = 0x020,
+            RotateCW   = 0x040, 
+            RotateCCW  = 0x080,
+            Fade       = 0x100
         }
     }
 }
