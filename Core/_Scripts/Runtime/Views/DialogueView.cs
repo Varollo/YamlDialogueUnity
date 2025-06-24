@@ -1,6 +1,5 @@
 using UnityEngine;
 using TMPro;
-using UnityEngine.UI;
 using UnityEngine.Events;
 using System.Collections;
 
@@ -51,17 +50,6 @@ namespace YamlDialogueUnity
         protected virtual void SetActorTxt(string actor, TMP_Text actorTxt)
         {
             actorTxt.text = actor;
-        }
-
-        protected virtual void SetActorImage(string actor, ActorDatabaseSO actorDatabase, Image actorImg, bool actorChanged)
-        {
-            if (!actorChanged)
-                return;
-
-            var actorSprite = actorDatabase.GetActorSprite(actor);
-            
-            if(actorImg.enabled = actorSprite != null)
-                actorImg.sprite = actorSprite;
         }
 
         public override IEnumerator OnShow()
