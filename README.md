@@ -5,9 +5,8 @@
 
  An interpreter library for .yaml files to use in your Unity games.
 
-[!![GitHub Release](https://img.shields.io/github/v/release/Varollo/YamlDialogueLib)
-](https://github.com/Varollo/YamlDialogueLib/releases)
-[![NuGet Version](https://img.shields.io/nuget/v/YamlDialogueLib)](https://www.nuget.org/packages/YamlDialogueLib/)
+[![GitHub Release](https://img.shields.io/github/v/release/Varollo/YamlDialogueUnity)
+](https://github.com/Varollo/YamlDialogueUnity/releases)
 [![License](https://img.shields.io/badge/license-MIT-lime.svg)](/LICENSE)
 
 | [🧐 About ](#-about-) | [🏁 Getting Started ](#-getting-started-) | [🎈 Usage ](#-usage-) |
