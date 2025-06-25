@@ -1,0 +1,22 @@
+{
+  "name": "com.varollo.yamldialogueunity",
+  "version": "1.0.0",
+  "displayName": "Yaml Dialogue Unity",
+  "description": "This is a *Unity* package for personal use in your games. It interprets a `.yaml` file into C# and provides a customizable plug-and-play UI with the use of prefabs. This package also supports DOTween as it's means of animating the user interface.",
+  "unity": "6000.0.23",
+  "unityRelease": "f1",
+  "documentationUrl": "https://github.com/Varollo/YamlDialogueUnity",
+  "changelogUrl": "https://github.com/Varollo/YamlDialogueUnity/releases",
+  "licensesUrl": "https://github.com/Varollo/YamlDialogueUnity/blob/main/LICENSE.md",
+ "keywords": [
+    "yaml",
+    "dialogue",
+    "yamldialogue"
+  ],
+  "author": {
+    "name": "Varollo",
+    "email": "rimoldi98@gmail.com",
+    "url": "https://varollo.github.io/"
+  }
+}
+
