@@ -1,31 +1,47 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace YamlDialogueUnity
 {
     public abstract class DialogueViewBase : SelectableView
     {
+        [Header("Actor")]
+        [SerializeField, Range(0, 2)] private int maxActors;
+        [SerializeField] private ActorDatabaseSO actorDatabase;
+        [SerializeField] private DialogueActorView actorView;
+        [Header("Options")]
+        [SerializeReference] private DialogueOptionViewBase optionPrefab;
+        [SerializeField] private Transform optionHolder;        
+        [Header("Events")]
+        public DialogueStepEvent OnStep;
+        public DialogueActionsEvent OnActions;
+
         private DialogueController _controller;
-        private CanvasGroup _mainCanvasGroup;
 
         public bool IsActive { get; private set; }
-
-        protected CanvasGroup GetCanvasGroup() => _mainCanvasGroup;
 
         protected override void Awake()
         {
             base.Awake();
-            _controller = CreateController();
 
-            _mainCanvasGroup = gameObject.AddComponent<CanvasGroup>();
-            _mainCanvasGroup.hideFlags = HideFlags.HideInInspector;
+            var optionsHandler = new DialogueOptionsHandler(optionPrefab, optionHolder);
+            _controller = new DialogueController(this, actorView, optionsHandler);
             
-            _mainCanvasGroup.alpha = 0;
-            _mainCanvasGroup.interactable = false;
-            _mainCanvasGroup.blocksRaycasts = false;
+            gameObject.SetActive(false);
         }
 
+        public void UpdateView(string actor, string line, string[] actions)
+        {
+            OnActorNameChange(actor);
+            OnLineChange(line);
+
+            OnStep?.Invoke(actor, line, actions);
+
+            if (actions != null && actions.Length > 0)
+                OnActions?.Invoke(actions);
+        }
 
         public void Next()
         {
@@ -36,9 +52,7 @@ namespace YamlDialogueUnity
         {
             void showDialogue()
             {
-                _mainCanvasGroup.alpha = 1;
-                _mainCanvasGroup.interactable = true;
-                _mainCanvasGroup.blocksRaycasts = true;
+                gameObject.SetActive(true);
 
                 StartCoroutine(CallbackCo(OnShow(), () =>
                 {
@@ -88,10 +102,20 @@ namespace YamlDialogueUnity
             yield break;
         }
 
-        public abstract int GetMaxActors();
-        public abstract ActorDatabaseSO GetActorDatabase();
-        protected abstract DialogueController CreateController();
-        public abstract DialogueOptionsHandler CreateOptionsHandler();
-        public abstract void UpdateView(string actor, string line, string[] actions);
+        public int GetMaxActors()
+        {
+            return maxActors;
+        }
+
+        public ActorDatabaseSO GetActorDatabase()
+        {
+            return actorDatabase;
+        }
+
+        protected abstract void OnLineChange(string line);
+        protected abstract void OnActorNameChange(string actor);
+        
+        [Serializable] public class DialogueStepEvent : UnityEvent<string, string, string[]> { }
+        [Serializable] public class DialogueActionsEvent : UnityEvent<string[]> { }
     }
 }

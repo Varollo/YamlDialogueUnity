@@ -14,12 +14,12 @@ namespace YamlDialogueUnity
         
         private YamlDialogue _dialogueInstance;
 
-        public DialogueController(DialogueViewBase dialogueView, DialogueActorViewBase actorView)
+        public DialogueController(DialogueViewBase dialogueView, DialogueActorViewBase actorView, DialogueOptionsHandler optionsHandler)
         {
             _dialogueView = dialogueView;
             _actorView = actorView;
 
-            _optionsHandler = dialogueView.CreateOptionsHandler();
+            _optionsHandler = optionsHandler;
             _actionsHandler = new DialogueActionsHandler();
             _selectionHandler = new ViewSelectionHandler();
 
@@ -98,7 +98,7 @@ namespace YamlDialogueUnity
                 _dialogueInstance.Current.CancelOption));
         }
 
-        public void OnSelectOptionView(DialogueOptionView view)
+        public void OnSelectOptionView(DialogueOptionViewBase view)
         {
             _selectionHandler.SelectView(view);
         }
