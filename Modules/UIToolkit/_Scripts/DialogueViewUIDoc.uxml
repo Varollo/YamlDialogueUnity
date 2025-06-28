@@ -1,0 +1,4 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Plugins/YamlDialogueUnity/Modules/UIToolkit/_Scripts/DialogueViewUIToolkit.uss?fileID=7433441132597879392&amp;guid=779da2f12202b984e9a6b5ea406d5df3&amp;type=3#DialogueViewUIToolkit" />
+    <YamlDialogueUnity.UIToolkit.DialogueView dialogueAsset="project://database/Assets/Plugins/YamlDialogueUnity/Core/Examples/_Content/example01_dialogue.yaml?fileID=4900000&amp;guid=ca34596dc493b394a93848b41f74bae3&amp;type=3#example01_dialogue" enabled="true" />
+</engine:UXML>

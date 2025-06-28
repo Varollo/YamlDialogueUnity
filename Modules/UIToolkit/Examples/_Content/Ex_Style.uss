@@ -1,0 +1,65 @@
+.TopLeftBtns {
+    width: 200px;
+    margin-top: 25px;
+    margin-right: 25px;
+    margin-bottom: 25px;
+    margin-left: 25px;
+}
+
+.button {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-left-color: rgba(255, 255, 255, 0.5);
+    border-right-color: rgba(255, 255, 255, 0.5);
+    border-top-color: rgba(255, 255, 255, 0.5);
+    border-bottom-color: rgba(255, 255, 255, 0.5);
+    border-top-width: 4px;
+    border-right-width: 4px;
+    border-bottom-width: 4px;
+    border-left-width: 4px;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    border-bottom-right-radius: 16px;
+    border-bottom-left-radius: 16px;
+    margin-top: 5px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    margin-left: 5px;
+    color: rgb(204, 204, 204);
+    -unity-font-style: bold;
+    font-size: 34px;
+}
+
+.button:hover {
+    transition-duration: 0.05s;
+    scale: 1.1 1.1;
+    transition-timing-function: ease-in-out;
+    transition-property: scale;
+}
+
+.info {
+    font-size: 48px;
+    color: rgba(255, 255, 255, 0.35);
+    -unity-text-align: upper-right;
+    position: absolute;
+    width: 100%;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    padding-top: 25px;
+    padding-right: 25px;
+    padding-bottom: 25px;
+    padding-left: 25px;
+}
+
+.actions {
+    color: rgb(128, 128, 128);
+    position: absolute;
+    top: auto;
+    left: 0;
+    right: 0;
+    bottom: 60%;
+    font-size: 36px;
+    -unity-font-style: italic;
+    -unity-text-align: upper-center;
+}

@@ -1,0 +1,11 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Plugins/YamlDialogueUnity/Modules/UIToolkit/Examples/_Content/Ex_Style.uss?fileID=7433441132597879392&amp;guid=5d39e6ecd0c0e1246b63b34475e7094d&amp;type=3#Ex_Style" />
+    <Style src="project://database/Assets/Plugins/YamlDialogueUnity/Modules/UIToolkit/_Scripts/DialogueViewUIToolkit.uss?fileID=7433441132597879392&amp;guid=779da2f12202b984e9a6b5ea406d5df3&amp;type=3#DialogueViewUIToolkit" />
+    <engine:Label text="Press ENTER to advance dialogue." name="InfoLbl" class="label info" />
+    <engine:Label text="* actions" name="ActionsLbl" class="actions" />
+    <engine:VisualElement name="TopLeftBtns" class="TopLeftBtns">
+        <engine:Button text="Play 1" tooltip="Load example 01" name="Ex01Btn" class="button" />
+        <engine:Button text="Play 2" tooltip="Load example 02" name="Ex02Btn" class="button" />
+    </engine:VisualElement>
+    <YamlDialogueUnity.UIToolkit.DialogueView enabled="false" />
+</engine:UXML>

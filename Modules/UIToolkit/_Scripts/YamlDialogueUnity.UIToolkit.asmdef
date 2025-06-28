@@ -1,0 +1,16 @@
+{
+    "name": "YamlDialogueUnity.UIToolkit",
+    "rootNamespace": "YamlDialogueUnity.UIToolkit",
+    "references": [
+        "GUID:ac05b5109d044b545b7133e1669caf43"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
