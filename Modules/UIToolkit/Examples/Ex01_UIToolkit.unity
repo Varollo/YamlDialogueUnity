@@ -215,7 +215,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8004b7db624aa354b911f9ea387b5e81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogueView: {fileID: 0}
   dialogueFile1: {fileID: 4900000, guid: ca34596dc493b394a93848b41f74bae3, type: 3}
   dialogueFile2: {fileID: 4900000, guid: 906a665fb30de5f4983ce80179bf7ec6, type: 3}
   uiDoc: {fileID: 366828991}

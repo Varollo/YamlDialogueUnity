@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -13,15 +12,18 @@ namespace YamlDialogueUnity.UIToolkit
         public static readonly string lineClassName = "dialogue-view__line";
         public static readonly string actorClassName = "dialogue-view__actor";
 
+        public static readonly string noActorModifier = "no-actor";
+
         private readonly DialogueControllerUIToolkit _controller;
 
-        private Label _lineLbl;
-        private Label _actorLbl;
+        private readonly Label _lineLbl;
+        private readonly Label _actorLbl;
 
         public TextAsset _dialogueAsset;
 
         public DialogueViewUIToolkit()
         {
+            focusable = true;
             AddToClassList(ussClassName);
             SetEnabled(false);
 
@@ -34,6 +36,8 @@ namespace YamlDialogueUnity.UIToolkit
             _actorLbl.AddToClassList(actorClassName);
             _actorLbl.SetEnabled(false);
             Add(_actorLbl);
+
+            SetNoActor();
 
             RegisterCallback<ClickEvent>(evt => OnClick(evt));
             RegisterCallback<NavigationSubmitEvent>(evt => OnSubmit(evt));
@@ -62,17 +66,20 @@ namespace YamlDialogueUnity.UIToolkit
 
         public void OnDialogueActor(string actor)
         {
+            if (string.IsNullOrEmpty(actor))
+            {
+                SetNoActor();
+                return;
+            }
+
+            RemoveNoActor();
             _actorLbl.text = actor;
-
-            bool hasActor = !string.IsNullOrEmpty(actor);
-
-            _actorLbl.SetEnabled(hasActor);
-            _lineLbl.SetEnabled(hasActor);
         }
 
         public void OnDialogueBegin()
         {
             SetEnabled(true);
+            Focus();
         }
 
         public void OnDialogueEnd()
@@ -106,6 +113,20 @@ namespace YamlDialogueUnity.UIToolkit
 
             evt.StopPropagation();
         }
+        #endregion
+
+        #region No Actor
+        private void SetNoActor()
+        {
+            _actorLbl.AddToClassList($"{actorClassName}__{noActorModifier}");
+            _lineLbl.AddToClassList($"{lineClassName}__{noActorModifier}");
+        }
+
+        private void RemoveNoActor()
+        {
+            _actorLbl.RemoveFromClassList($"{actorClassName}__{noActorModifier}");
+            _lineLbl.RemoveFromClassList($"{lineClassName}__{noActorModifier}");
+        } 
         #endregion
     }
 }
